@@ -1,28 +1,18 @@
 import express from "express";
 import {
-  getAllContacts,
-  getOneContact,
-  deleteContact,
-  createContact,
-  updateContact,
-  favoriteContact,
-} from "../controllers/contactsControllers.js";
+  getAllStores,
+  getStoresNearest,
+} from "../controllers/storesControllers.js";
 
-import { isValidId } from "../helpers/isValidId.js";
-import { isValidToken } from "../helpers/isValidToken.js";
-import { isOwnerValid } from "../helpers/isOwnerValid.js";
+// import { isValidId } from "../helpers/isValidId.js";
+// import { isValidToken } from "../helpers/isValidToken.js";
+// import { isOwnerValid } from "../helpers/isOwnerValid.js";
 
 const storesRouter = express.Router();
 
-storesRouter.get("/", getAllContacts);
+storesRouter.get("/", getAllStores);
 
-storesRouter.get(
-  "/nearest",
-  isValidToken,
-  isValidId,
-  isOwnerValid,
-  getOneContact
-);
+storesRouter.get("/nearest", getStoresNearest);
 
 // contactsRouter.delete(
 //   "/:id",

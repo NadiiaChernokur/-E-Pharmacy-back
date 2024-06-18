@@ -8,6 +8,6 @@ export const createContactSchema = Joi.object({
     .required(),
 });
 
-export const updateFavoriteSchema = Joi.object({
-  favorite: Joi.boolean().required(),
-});
+// export const updateFavoriteSchema = Joi.object({
+//   favorite: Joi.boolean().required(),
+// });

@@ -7,9 +7,8 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import productsRouter from "./routes/productsRouter.js";
 import cartRouter from "./routes/cartRouter.js";
-import customerRouter from "./routes/customerRouter.js";
+// import customerRouter from "./routes/customerRouter.js";
 import { Review } from "./db/review.js";
-// import { avatarsDir } from "./helpers/upload.js";
 
 dotenv.config();
 const { DB_HOST } = process.env;
@@ -25,7 +24,7 @@ mongoose
   });
 
 const app = express();
-// app.use("/avatars", express.static(avatarsDir));
+
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());

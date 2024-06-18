@@ -78,7 +78,7 @@ export const loginUser = async (req, res, next) => {
     if (error) throw RegisterHttpError(error);
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-
+    console.log(user);
     if (!user) throw HttpError(401, "Email or password is wrong");
     const comparePassword = await bcrypt.compare(password, user.password);
     if (!comparePassword) throw HttpError(401, "Email or password is wrong");
@@ -86,6 +86,8 @@ export const loginUser = async (req, res, next) => {
     const payload = { id: user._id };
 
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "3d" });
+    console.log(token);
+    console.log(SECRET_KEY);
     await User.findByIdAndUpdate(user._id, { token });
     res.status(200).json({ token, user });
   } catch (error) {
@@ -96,12 +98,12 @@ export const loginUser = async (req, res, next) => {
 export const logoutUser = async (req, res, next) => {
   const { _id } = req.user;
   await User.findByIdAndUpdate(_id, { token: "" });
-  res.status(204).json({ messege: "No Content" });
+  res.status(204).json({ message: "No Content" });
 };
 
 export const getUser = async (req, res, next) => {
-  const { email, subscription } = req.user;
-  res.status(200).json({ email, subscription });
+  const { email, name } = req.user;
+  res.status(200).json({ email, name });
 };
 
 // export const changeSubscription = async (req, res, next) => {
