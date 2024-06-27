@@ -7,10 +7,11 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import productsRouter from "./routes/productsRouter.js";
 import cartRouter from "./routes/cartRouter.js";
-// import customerRouter from "./routes/customerRouter.js";
 import { Review } from "./db/review.js";
 
 dotenv.config();
+const app = express();
+
 const { DB_HOST } = process.env;
 mongoose
   .connect(DB_HOST)
@@ -23,13 +24,18 @@ mongoose
     process.exit(1);
   });
 
-const app = express();
-
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
 app.use("/api/user", usersRouter);
-app.use("/api/stores", storesRouter);
+app.use(
+  "/api/stores",
+  (req, res, next) => {
+    console.log("Accessed /api/stores");
+    next();
+  },
+  storesRouter
+);
 app.use("/api/customer-reviews", async (req, res) => {
   try {
     const reviews = await Review.find();
@@ -46,11 +52,14 @@ app.use((_, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
 app.use((err, req, res, next) => {
-  if (err.message.includes("E11000")) {
-    console.log(err.message);
-    return res.status(409).json({ Messege: "Email in use" });
-  }
-  const { status = 500, message = "Server error" } = err;
-  res.status(status).json({ message });
+  console.error(err.stack);
+  res
+    .status(err.status || 500)
+    .json({ message: err.message || "Internal Server Error" });
 });

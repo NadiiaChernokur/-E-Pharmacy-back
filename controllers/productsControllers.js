@@ -15,12 +15,13 @@ export const getProducts = async (req, res, nex) => {
     }
     const limitNum = parseInt(limit);
     const pageNum = parseInt(page);
+    const totalProducts = await Products.countDocuments(query);
 
     const products = await Products.find(query)
       .limit(limitNum)
       .skip((pageNum - 1) * limitNum);
-
-    res.status(200).json(products);
+    const totalPages = Math.ceil(totalProducts / limitNum);
+    res.status(200).json({ products, totalProducts, totalPages });
   } catch (error) {
     res.json(HttpError(404));
   }
@@ -28,18 +29,36 @@ export const getProducts = async (req, res, nex) => {
 
 export const getProductToId = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { ids } = req.body;
 
-    const product = await Products.findById(id);
-    if (!product) {
-      return next(HttpError(404, "Product not found"));
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return next(HttpError(400, "Array of product IDs is required"));
     }
 
-    res.status(200).json(product);
+    const products = await Products.find({ _id: { $in: ids } });
+
+    if (!products || products.length === 0) {
+      return next(HttpError(404, "Products not found"));
+    }
+
+    res.status(200).json(products);
   } catch (error) {
     next(error);
   }
+  // try {
+  //   const { id } = req.params;
+
+  //   const product = await Products.findById(id);
+  //   if (!product) {
+  //     return next(HttpError(404, "Product not found"));
+  //   }
+
+  //   res.status(200).json(product);
+  // } catch (error) {
+  //   next(error);
+  // }
 };
+
 export const getProductsCategory = async (req, res, next) => {
   try {
     const products = await Products.find();

@@ -7,7 +7,3 @@ export const createContactSchema = Joi.object({
     .pattern(/^\(\d{3}\) \d{3}-\d{4}$/)
     .required(),
 });
-
-// export const updateFavoriteSchema = Joi.object({
-//   favorite: Joi.boolean().required(),
-// });

@@ -1,6 +1,6 @@
 import { Order } from "../db/orders.js";
 import { Products } from "../db/products.js";
-import { User } from "../db/user.js";
+// import { User } from "../db/user.js";
 import HttpError from "../helpers/HttpError.js";
 import RegisterHttpError from "../helpers/RegisterHttpError.js";
 import { orderSchema } from "../schemas/orderSchemas.js";
@@ -30,6 +30,21 @@ export const addToCart = async (req, res, next) => {
     next(error);
   }
 };
+
+export const removeToCart = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const user = req.user;
+    user.cart = user.cart.filter((item) => item.productId.toString() !== id);
+    console.log(user);
+    await user.save();
+    res.status(200).json(user.cart);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const addToOrders = async (req, res, next) => {
   try {
     const { error } = orderSchema.validate(req.body);
