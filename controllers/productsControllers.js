@@ -45,18 +45,6 @@ export const getProductToId = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-  // try {
-  //   const { id } = req.params;
-
-  //   const product = await Products.findById(id);
-  //   if (!product) {
-  //     return next(HttpError(404, "Product not found"));
-  //   }
-
-  //   res.status(200).json(product);
-  // } catch (error) {
-  //   next(error);
-  // }
 };
 
 export const getProductsCategory = async (req, res, next) => {

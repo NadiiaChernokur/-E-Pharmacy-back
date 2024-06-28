@@ -68,7 +68,7 @@ export const getUser = async (req, res, next) => {
   try {
     const user = req.user.toObject();
     delete user.password;
-    console.log(user);
+
     res.status(200).json(user);
   } catch (error) {
     next(error);

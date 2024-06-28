@@ -1,6 +1,7 @@
 import { Order } from "../db/orders.js";
 import { Products } from "../db/products.js";
-// import { User } from "../db/user.js";
+import { User } from "../db/user.js";
+
 import HttpError from "../helpers/HttpError.js";
 import RegisterHttpError from "../helpers/RegisterHttpError.js";
 import { orderSchema } from "../schemas/orderSchemas.js";
@@ -34,10 +35,10 @@ export const addToCart = async (req, res, next) => {
 export const removeToCart = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log(id);
+
     const user = req.user;
     user.cart = user.cart.filter((item) => item.productId.toString() !== id);
-    console.log(user);
+
     await user.save();
     res.status(200).json(user.cart);
   } catch (error) {
@@ -54,5 +55,17 @@ export const addToOrders = async (req, res, next) => {
     res.status(200).json("Order successfully added");
   } catch (error) {
     next(error);
+  }
+};
+export const clearCart = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    await User.findByIdAndUpdate(userId, { cart: [] });
+
+    res.status(200).json({ message: "Cart cleared successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error clearing cart", error });
   }
 };

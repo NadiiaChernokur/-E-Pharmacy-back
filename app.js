@@ -39,7 +39,7 @@ app.use(
 app.use("/api/customer-reviews", async (req, res) => {
   try {
     const reviews = await Review.find();
-    console.log(reviews);
+
     res.json(reviews);
   } catch (err) {
     res.status(500).json({ message: err.message });
